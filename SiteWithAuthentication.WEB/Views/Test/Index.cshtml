@@ -1,0 +1,43 @@
+﻿@using SiteWithAuthentication.WEB.Models
+@model IEnumerable<SubjectViewModel>
+
+@{
+    ViewBag.Title = "Subjects for testing";
+}
+
+<h2>Subjects for testing:</h2>
+
+<div class="row">
+    <div class="col-md-9">
+        <table class="table table-striped table-bordered table-hover">
+            <tr>
+                <th class="text-center" style="width: 35%">
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th class="text-center" style="width: 55%">
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th style="width: 10%"></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td class="text-center">
+                        @Html.ActionLink("Specialities", "SubjectSpecialities", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Back to Main page", "Index", "Home")
+</p>

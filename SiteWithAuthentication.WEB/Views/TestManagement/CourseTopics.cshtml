@@ -1,0 +1,82 @@
+﻿@using SiteWithAuthentication.WEB.Models
+@model IEnumerable<TopicViewModel>
+
+@{
+    ViewBag.Title = ViewBag.CourseName + " topics";
+}
+@section styles {
+    <link href='@Url.Content("~/Content/themes/base/jquery-ui.css")' rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/all.css")" rel="stylesheet" type="text/css" />
+}
+
+<h2>@ViewBag.CourseName topics:</h2>
+<p>
+    @Html.ActionLink("Redact topics", "CourseTopicsInJqGrid", new { id = ViewBag.ParentId })
+</p>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover">
+            <tr>
+                <th class="text-center" style="width: 35%">
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th class="text-center" style="width: 45%">
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th class="text-center" style="width: 5%">
+                    @Html.DisplayNameFor(model => model.TopicNumber)
+                </th>
+                <th class="text-center" style="width: 5%">
+                    @Html.DisplayNameFor(model => model.IsFree)
+                </th>
+                <th class="text-center" style="width: 10%"></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.TopicNumber)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.IsFree)
+                    </td>
+                    <td class="text-center">
+                        @Html.ActionLink("Questions", "TopicQuestions", new { id = item.ID })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+<p>
+    @{
+        if (Session["ActiveController"] != null)
+        {
+            string activeController = Session["ActiveController"].ToString();
+            if (activeController == "Assignments")
+            {
+                @Html.ActionLink("Back to Courses", "Index", activeController, new { id = ViewBag.ParentId }, null)
+            }
+            else if (activeController == "Admin")
+            {
+                int parentParentIdForAdminController;
+                if (Session["ParentParentIdForAdminController"] != null)
+                {
+                    parentParentIdForAdminController = int.Parse(Session["ParentParentIdForAdminController"].ToString());
+                    @Html.ActionLink("Back to Courses", "SpecialityCourses", activeController, new { id = parentParentIdForAdminController }, null)
+                }
+            }
+            else
+            {
+                @Html.ActionLink("Back to Courses", "Index")
+            }
+        }
+    }
+</p>

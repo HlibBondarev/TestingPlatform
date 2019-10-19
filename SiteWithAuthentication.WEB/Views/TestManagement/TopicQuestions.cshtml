@@ -1,0 +1,159 @@
+﻿@using SiteWithAuthentication.WEB.Models
+@model IEnumerable<QuestionViewModel>
+
+@{
+    ViewBag.Title = ViewBag.TopicName + " (questions)";
+}
+@section styles {
+    <link href='@Url.Content("~/Content/themes/base/jquery-ui.css")' rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/all.css")" rel="stylesheet" type="text/css" />
+}
+
+<h2>Topic: @ViewBag.TopicName</h2>
+<p>
+    @Html.ActionLink("Redact questions", "TopicQuestionsInJqGrid", new { id = ViewBag.ParentId })
+</p>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover" table-layout = "fixed">
+            <tr>
+                <th class="text-center" style="width: 45%">
+                    @Html.DisplayNameFor(model => model.Question)
+                </th>
+                <th class="text-center" style="width: 10%">
+                    @Html.DisplayNameFor(model => model.AnswerType)
+                </th>
+                <th class="text-center" style="width: 25%">
+                    @Html.DisplayNameFor(model => model.ResourceRef)
+                </th>
+                <th class="text-center" style="width: 5%">
+                    @Html.DisplayNameFor(model => model.QuestionWeight)
+                </th>
+                <th class="text-center" style="width: 15%"></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.LabelFor(modelItem => item.Question, item.Question, new { style = "white-space: pre-wrap; font-weight: normal" })
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.AnswerType)
+                    </td>
+                    <td>
+                        <a href="../../@item.ResourceRef">@item.ResourceRef</a>
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.QuestionWeight)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Answers", "QuestionAnswersInJqGrid", new { id = item.ID }) <br />
+                        <input type="file" id="picture @item.ID" />
+                        @{
+                            string label = string.Empty;
+                            if (item.ResourceRef == null)
+                            {
+                                label = "Upload a picture";
+                            }
+                            else
+                            {
+                                label = "Change a picture";
+                            }
+                        }
+                        <button value="@item.ID">@label</button>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Back to Topics", "CourseTopics", new { id = ViewBag.ParentParentId })
+</p>
+
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var buttons = $("button");
+
+            for (var i = 0; i < buttons.length; i++) {
+
+                if (buttons[i].addEventListener)    // check supporting DOM Level 2
+                {
+                    buttons[i].addEventListener("click",
+                        function (e) {
+                            var files = document.getElementById('picture ' + this.value).files;
+                            if (files.length = 0) { alert("You haven't selected any files!"); return; }
+                            if (files.length > 1) { alert("You can't select more than one file!"); return; }
+                            if (window.FormData == undefined) { alert("The browser does not support downloading HTML5 files!"); return; }
+                            var data = new FormData();
+                            data.append("file", files[0]);
+                            data.append("questionId", this.value);
+
+                            $.ajax({
+                                type: "POST",
+                                url: '@Url.Action("UploadFile")',
+                                contentType: false,
+                                processData: false,
+                                data: data,
+                                success: function (result) {
+                                    alert(result);
+                                    window.location.href =
+                                        "@{ if (ViewBag.ParentId == null)
+                                            {
+                                                Url.Action("Index");
+                                            }
+                                            else
+                                            {
+                                                Url.Action(ViewBag.Action, new { id = ViewBag.ParentId });                            }
+                                            }";
+                                },
+                                error: function (xhr, status, p3) {
+                                    alert(xhr.responseText);
+                                }
+                            });
+                        },
+                        false);
+                }
+                else {
+                    buttons[i].onclick = (function (e) {
+                        var files = document.getElementById('picture' + this.value).files;
+                        if (files.length = 0) { alert("You haven't selected any files!"); return; }
+                        if (files.length > 1) { alert("You can't select more than one file!"); return; }
+                        if (window.FormData == undefined) { alert("The browser does not support downloading HTML5 files!"); return; }
+                        var data = new FormData();
+                        data.append("file", files[0]);
+                        data.append("questionId", this.value);
+
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("UploadFile")',
+                            contentType: false,
+                            processData: false,
+                            data: data,
+                            success: function (result) {
+                                alert(result);
+                                window.location.href =
+                                    "@{ if (ViewBag.ParentId == null)
+                                        {
+                                            Url.Action("Index");
+                                        }
+                                        else
+                                        {
+                                            Url.Action(ViewBag.Action, new { id = ViewBag.ParentId });
+                                        }
+                                    }";
+                            },
+                            error: function (xhr, status, p3) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    })
+                }
+            }
+        });
+
+    </script>
+}

@@ -1,0 +1,21 @@
+﻿@using SiteWithAuthentication.BLL.Infrastructure
+@model OperationDetails
+
+<h2>@Model.Property:</h2>
+<p>@Model.Message</p>
+<script>
+    $(document).ready(function () {
+        setTimeout(function() {
+            window.location.href =
+                "@{ if (ViewBag.ParentId == null)
+                    {
+                        Url.Action("Index");
+                    }
+                    else
+                    {
+                        Url.Action(ViewBag.Action, new { id = ViewBag.ParentId });
+                    }
+                  }";
+        }, 1000);
+    })
+</script>

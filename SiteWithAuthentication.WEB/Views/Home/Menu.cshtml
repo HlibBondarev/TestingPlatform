@@ -1,0 +1,115 @@
+﻿@*Styles for menu with nested levels.*@
+<style type="text/css">
+    .dropdown-submenu {
+        position: relative;
+    }
+
+        .dropdown-submenu > .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -6px;
+            margin-left: -1px;
+            -webkit-border-radius: 0 6px 6px 6px;
+            -moz-border-radius: 0 6px 6px 6px;
+            border-radius: 0 6px 6px 6px;
+        }
+
+        .dropdown-submenu:hover > .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-submenu > a:after {
+            display: block;
+            content: " ";
+            float: right;
+            width: 0;
+            height: 0;
+            border-color: transparent;
+            border-style: solid;
+            border-width: 5px 0 5px 5px;
+            border-left-color: #cccccc;
+            margin-top: 5px;
+            margin-right: -10px;
+        }
+
+        .dropdown-submenu:hover > a:after {
+            border-left-color: #ffffff;
+        }
+
+        .dropdown-submenu .pull-left {
+            float: none;
+        }
+
+            .dropdown-submenu.pull-left > .dropdown-menu {
+                left: -100%;
+                margin-left: 10px;
+                -webkit-border-radius: 6px 0 6px 6px;
+                -moz-border-radius: 6px 0 6px 6px;
+                border-radius: 6px 0 6px 6px;
+            }
+
+    .root:hover .dropdown-menu {
+        display: block;
+    }
+</style>
+
+
+@using SiteWithAuthentication.WEB.Util.SiteMenu
+@model IEnumerable<MenuItem>
+
+@helper BuildMenu(IEnumerable<MenuItem> data, int? parentId = null)
+{
+
+    var items = data.Where(d => d.ParentId == parentId).OrderBy(i => i.Order);
+    if (items.Any())
+    {
+        foreach (var item in items)
+        {
+            if (item.Children.Count > 0)
+            {
+                <li class="dropdown-submenu">
+                    <a href="@item.Url" class="dropdown-toggle" data-toggle="dropdown">@item.Header</a>
+                    <ul class="dropdown-menu">
+                        @BuildMenu(data, item.MenuItemId)
+                    </ul>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="@item.Url">@item.Header</a>
+                </li>
+            }
+        }
+    }
+}
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        </div>
+        <ul class="nav navbar-nav" role="menu">
+            @BuildMenu(Model)
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <li>@Html.ActionLink("Login", "Login", "Account")</li>
+                <li>@Html.ActionLink("Sign Up", "Register", "Account")</li>
+            }
+            else
+            {
+                <li>
+                    <a>Hi! @User.Identity.Name</a>
+                </li>
+                <li>@Html.ActionLink("Log out", "Logout", "Account")</li>
+            }
+        </ul>
+    </div>
+</div>

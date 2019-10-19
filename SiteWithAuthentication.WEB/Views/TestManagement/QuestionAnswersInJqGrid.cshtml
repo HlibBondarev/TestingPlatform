@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Answers";
+}
+@section styles {
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/jquery.jqGrid/ui.jqgrid.css" rel="stylesheet" />
+}
+
+<p style="white-space: pre-wrap">@ViewBag.QuestionText</p>
+<div>
+    <table id="jqGrid"></table>
+    <div id="jqControls"></div>
+</div>
+<p>
+    @Html.ActionLink("Back to Questions", "TopicQuestions", new { id = ViewBag.ParentParentId })
+</p>
+@section scripts {
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script src="~/Scripts/i18n/grid.locale-en.js"></script>
+    <script src="~/Scripts/jquery.jqGrid.min.js"></script>
+    <script src="~/Scripts/JqGridScripts/JqGridAnswerScript.js"></script>
+}

@@ -1,0 +1,152 @@
+﻿@using SiteWithAuthentication.WEB.Models
+@model IEnumerable<CourseViewModel>
+
+@section styles {
+    <link href='@Url.Content("~/Content/themes/base/jquery-ui.css")' rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/all.css")" rel="stylesheet" type="text/css" />
+}
+@{
+    ViewBag.Title = ViewBag.SpecialityName + " courses";
+}
+
+<h2>@ViewBag.SpecialityName courses:</h2>
+<p>
+    @Html.ActionLink("Create New", "CreateCourse", new { specialityId = ViewBag.ParentId }, new { @class = "viewDialog", data_dialog_title = "Course creation" })
+</p>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover">
+            <tr>
+                <th class="text-center" style="width: 20%">
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th class="text-center" style="width: 23%">
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th class="text-center" style="width: 5%">
+                    @Html.DisplayNameFor(model => model.CourseTestQuestionsNumber)
+                </th>
+                <th class="text-center" style="width: 5%">
+                    @Html.DisplayNameFor(model => model.TopicTestQuestionsNumber)
+                </th>
+                <th class="text-center" style="width: 5%">
+                    @Html.DisplayNameFor(model => model.TimeToAnswerOneQuestion)
+                </th>
+
+                <th class="text-center" style="width: 5%">
+                    @Html.DisplayNameFor(model => model.AttemptsNumber)
+                </th>
+                <th class="text-center" style="width: 5%">
+                    @Html.DisplayNameFor(model => model.PassingScore)
+                </th>
+                <th class="text-center" style="width: 5%">
+                    @Html.DisplayNameFor(model => model.IsApproved)
+                </th>
+                <th class="text-center" style="width: 5%">
+                    @Html.DisplayNameFor(model => model.IsFree)
+                </th>
+                <th style="width: 22%"></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.CourseTestQuestionsNumber)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.TopicTestQuestionsNumber)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.TimeToAnswerOneQuestion)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.AttemptsNumber)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.PassingScore)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.IsApproved)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.IsFree)
+                    </td>
+                    <td class="text-center">
+                        @Html.ActionLink("Edit", "EditCourse", new { id = item.Id }, new { @class = "viewDialog", data_dialog_title = "Course edition" }) |
+                        @Html.ActionLink("Delete", "DeleteCourse", new { id = item.Id }, new { @class = "viewDialog", data_dialog_title = "Course deleting" }) |
+                        @Html.ActionLink("Topics", "CourseTopics", "TestManagement", new { id = item.Id }, null)<br/>
+                        @Html.ActionLink("Assignments", "CourseAssignments", "TestManagement", new { id = item.Id }, null) |
+                        @Html.ActionLink("Subscriptions", "CourseSubscriptions", "TestManagement", new { id = item.Id }, null)
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Back to Specialities", "SubjectSpecialities", new { id = ViewBag.ParentParentId })
+</p>
+
+@section scripts {
+    <script src='@Url.Content("~/Scripts/jquery-ui-1.12.1.min.js")' type="text/javascript"></script>
+    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/themes/sunny/jquery-ui.css">
+    <script>
+        $(document).ready(function () {
+
+            $.ajaxSetup({ cache: false });
+
+            $(".viewDialog").on("click", function (e) {
+                e.preventDefault();
+
+                var actionName;
+                var actionTitle = $(this).attr("data-dialog-title");
+                switch (actionTitle) {
+                    case "Course creation":
+                        actionName = "/Admin/CreateCourse";
+                        break;
+                    case "Course edition":
+                        actionName = "/Admin/EditCourse";
+                        break;
+                    case "Course deleting":
+                        actionName = "/Admin/DeleteCourse";
+                        break;
+                }
+
+                $("<div id='dialogContent'></div>")
+                    .addClass("dialog")
+                    .appendTo("body")
+                    .load(this.href)
+                    .dialog({
+                        title: $(this).attr("data-dialog-title"),
+                        close: function () { $(this).remove() },
+                        modal: true,
+                        width: $(window).width() * 0.45,
+                        buttons: [{
+                            text: "Ok",
+                            click: function () {
+                                $.ajax({
+                                    url: actionName,
+                                    type: "POST",
+                                    data: $('form').serialize(),
+                                    datatype: "json",
+                                    success: function (result) {
+                                        $("#dialogContent").html(result);
+                                    }
+                                })
+                            }
+                        },
+                        { text: "Cancel", click: function () { $(this).dialog("close") } }]
+                    });
+            });
+        });
+
+    </script>
+}

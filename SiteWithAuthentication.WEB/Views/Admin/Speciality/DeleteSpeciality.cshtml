@@ -1,0 +1,45 @@
+﻿@using SiteWithAuthentication.WEB.Models
+@model SpecialityViewModel
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>@ViewBag.SubjectName speciality:</h4>
+    <h4>@ViewBag.Message</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsApproved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsApproved)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+
+        <div>
+            @Html.ActionLink("Back to specialities list", "SubjectSpecialities", new { id = ViewBag.ParentId })
+        </div>
+    }
+</div>

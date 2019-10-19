@@ -1,0 +1,74 @@
+﻿@using SiteWithAuthentication.WEB.Models
+@model TestResultViewModel
+
+@{
+    ViewBag.Title = ViewBag.CourseName + " test results";
+}
+
+<div class="row">
+    <div class="col-md-9">
+        @{
+            if (Model.IsPassedTest)
+            {
+                <h2>Congratulations! Test is passed!</h2>
+            }
+            else
+            {
+                <h2>Test is failed!</h2>
+            }
+        }
+        <h2>Result: @Model.Result / @Model.MaxScore</h2>
+        <h2>@ViewBag.CourseName test results:</h2>
+        <table class="table table-striped table-bordered table-hover">
+            <tr>
+                <th class="text-center" style="width: 90%">
+                    @Html.Label("Question")
+                </th>
+                <th class="text-center" style="width: 10%">
+                    @Html.Label("Is proper")
+                </th>
+            </tr>
+        </table>
+        @{
+            var topics = (from item in Model.TestResultDetails select new { item.Topic }).Distinct().OrderBy(t => t.Topic);
+            foreach (var topic in topics)
+            {
+                IEnumerable<TestResultDetailViewModel> answers = Model.TestResultDetails.Where(answer => answer.Topic == topic.Topic);
+                @Html.LabelFor(modelItem => topic.Topic, topic.Topic)
+                <table class="table table-striped table-bordered">
+                    @{ foreach (var item in answers)
+                        {
+                            <tr>
+                                <th style="width: 90%">
+                                    @Html.LabelFor(modelItem => item.Question, item.Question, new { style = "white-space: pre-wrap; font-weight: normal" })
+                                </th>
+                                <th class="text-center" style="width: 10%">
+                                    @Html.CheckBox("IsProperAnswer", item.IsProperAnswer, new { disabled = "disabled" })
+                                </th>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
+        }
+    </div>
+</div>
+
+@Html.ActionLink("Back to Main page", "Index", "Home")
+
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Prevent return to previous page.
+            function removeBack() {
+                history.pushState(null, null, '');
+                window.addEventListener('popstate', function () {
+                    history.pushState(null, null, '');
+                });
+            };
+            removeBack();
+        })
+    </script>
+}
+

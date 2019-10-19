@@ -1,0 +1,43 @@
+﻿@using SiteWithAuthentication.WEB.Models.UserAnswerViewModel
+@using MvcCheckBoxList.Model
+@model UserQuestionAnswersViewModel
+
+<div id="ajaxResults">
+    <div class="col-md-12">
+        @{
+            if (Model.Question != null)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(modelItem => modelItem.Question, Model.Question, new { style = "white-space: pre-wrap" })
+                </div>
+            }
+        }
+    </div>
+
+    <div class="col-md-12">
+        @{
+            if (Model.ResourceRef != null)
+            {
+                <div class="form-group">
+                    <img src="../../@Model.ResourceRef" alt="@Model.Question" height="300" />
+                </div>
+            }
+        }
+    </div>
+
+    <div class="col-md-12">
+        <section class="checkBoxListFor">
+            <label>Please write your answer:</label>
+            <br />
+            @using (Ajax.BeginForm("TextQuestionAnswers", new AjaxOptions { UpdateTargetId = "ajaxResults" }))
+            {
+                @Html.AntiForgeryToken()
+                @*@Html.TextBoxFor(model => model.SelectedUserAnswers.FirstOrDefault().Answer, new { @class = "userAnswer", autocomplete = "off" })*@
+                @Html.TextBoxFor(model => model.SelectedUserAnswers.FirstOrDefault().Answer, new { @class = "userAnswer" })
+                <input name="answerId" id="answerId" type="hidden" value="@Model.SelectedUserAnswers.FirstOrDefault().Id" />
+                @Html.HiddenFor(model => model.QuestionId)
+                <input id="submitButton" type="submit" hidden="hidden" />
+            }
+        </section>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Moderator subscriptions";
+}
+@section styles {
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/jquery.jqGrid/ui.jqgrid.css" rel="stylesheet" />
+}
+
+<h2>Moderator subscriptions:</h2>
+<div>
+    <table id="jqGrid"></table>
+    <div id="jqControls"></div>
+</div>
+<p>
+    @Html.ActionLink("Back to Main page", "Index", "Home")
+</p>
+@section scripts {
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script src="~/Scripts/i18n/grid.locale-en.js"></script>
+    <script src="~/Scripts/jquery.jqGrid.min.js"></script>
+    <script src="~/Scripts/JqGridScripts/JqGridModeratorSubscriptionScript.js"></script>
+}
