@@ -29,9 +29,8 @@ namespace SiteWithAuthentication.WEB.Util.SiteMenu
                              new List<MenuItem>()
                              {
                                  new MenuItem{MenuItemId=42, Header = "Create a new test", Url = "/ModeratorSubscription/Index", Order = 2, ParentId = 40},
-                                 //new MenuItem{MenuItemId=44, Header = "Your assignments", Url = "/Assignments/Index", Order = 4, ParentId = 40},
                                  new MenuItem{MenuItemId=50, Header = "Test results", Url = "#", Order = 5},
-                                 new MenuItem{MenuItemId=51, Header = "Your results", Url = "/TestResults/Index", Order = 1, ParentId = 50},
+                                 new MenuItem{MenuItemId=51, Header = "My results", Url = "/TestResults/Index", Order = 1, ParentId = 50},
                              }
                          );
                     break;
@@ -41,12 +40,11 @@ namespace SiteWithAuthentication.WEB.Util.SiteMenu
                              new List<MenuItem>()
                              {
                                  new MenuItem{MenuItemId=42, Header = "Create a new test", Url = "/ModeratorSubscription/Index", Order = 2, ParentId = 40},
-                                 new MenuItem{MenuItemId=43, Header = "Your tests", Url = "/TestManagement/Index", Order = 3, ParentId = 40},
-                                 new MenuItem{MenuItemId=44, Header = "Your assignments", Url = "/Assignments/Index", Order = 4, ParentId = 40},
+                                 new MenuItem{MenuItemId=43, Header = "My tests", Url = "/TestManagement/Index", Order = 3, ParentId = 40},
+                                 new MenuItem{MenuItemId=44, Header = "My assignments", Url = "/Assignments/Index", Order = 4, ParentId = 40},
                                  new MenuItem{MenuItemId=50, Header = "Test results", Url = "#", Order = 5},
-                                 new MenuItem{MenuItemId=51, Header = "Your results", Url = "/TestResults/Index", Order = 1, ParentId = 50},
+                                 new MenuItem{MenuItemId=51, Header = "My results", Url = "/TestResults/Index", Order = 1, ParentId = 50},
                                  new MenuItem{MenuItemId=52, Header = "Subscriber results", Url = "/TestResults/ModeratorCourses", Order = 2, ParentId = 50},
-                                 //new MenuItem{MenuItemId=60, Header = "Moderator", Url = "#", Order = 6}
                              }
                          );
                     break;
@@ -56,12 +54,11 @@ namespace SiteWithAuthentication.WEB.Util.SiteMenu
                              new List<MenuItem>()
                              {
                                  new MenuItem{MenuItemId=42, Header = "Create a new test", Url = "/ModeratorSubscription/Index", Order = 2, ParentId = 40},
-                                 new MenuItem{MenuItemId=43, Header = "Your tests", Url = "/TestManagement/Index", Order = 3, ParentId = 40},
-                                 new MenuItem{MenuItemId=44, Header = "Your assignments", Url = "/Assignments/Index", Order = 4, ParentId = 40},
+                                 new MenuItem{MenuItemId=43, Header = "My tests", Url = "/TestManagement/Index", Order = 3, ParentId = 40},
+                                 new MenuItem{MenuItemId=44, Header = "My assignments", Url = "/Assignments/Index", Order = 4, ParentId = 40},
                                  new MenuItem{MenuItemId=50, Header = "Test results", Url = "#", Order = 5},
-                                 new MenuItem{MenuItemId=51, Header = "Your results", Url = "/TestResults/Index", Order = 1, ParentId = 50},
+                                 new MenuItem{MenuItemId=51, Header = "My results", Url = "/TestResults/Index", Order = 1, ParentId = 50},
                                  new MenuItem{MenuItemId=52, Header = "Subscriber results", Url = "/TestResults/ModeratorCourses", Order = 2, ParentId = 50},
-                                 //new MenuItem{MenuItemId=60, Header = "Moderator", Url = "#", Order = 6},
                                  new MenuItem{MenuItemId=70, Header = "Admin", Url = "#", Order = 7},
                                  new MenuItem{MenuItemId=71, Header = "Test administration", Url = "/Admin/Index", Order = 1, ParentId = 70},
                                  new MenuItem{MenuItemId=72, Header = "Moderator subscription", Url = "/Admin/ModeratorSubcriptions", Order = 2, ParentId = 70},
