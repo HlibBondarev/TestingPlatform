@@ -857,7 +857,11 @@ namespace SiteWithAuthentication.WEB.Controllers
                 }
 
                 // III.Get the test result.
-                TestResultViewModel testResult = PLRepository.CalculateTestResults(AllAnswers, UserAnswers, TestQuetions);
+                OperationDetails operationDetails = PLRepository.CalculateTestResults(AllAnswers, UserAnswers, TestQuetions, out TestResultViewModel testResult);
+                if (!operationDetails.Succedeed)
+                {
+                    return View("Report", operationDetails);
+                }
                 // Is the test passed?
                 int firstQuestionId = AllAnswers.FirstOrDefault().Key;
                 CourseDTO courseDTO = (await QuestionService.GetAsync(firstQuestionId)).Topic.Course;
@@ -894,6 +898,7 @@ namespace SiteWithAuthentication.WEB.Controllers
                 //StartTestTime = null;
 
                 // II. Check.
+                OperationDetails operationDetails;
                 string currentUserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
                 if (currentUserId == null || AllAnswers.Count == 0 || UserAnswers.Count == 0)
                 {
@@ -901,18 +906,18 @@ namespace SiteWithAuthentication.WEB.Controllers
                 }
 
                 // III.Get the test result.
-                TestResultViewModel testResult = PLRepository.CalculateTestResults(AllAnswers, UserAnswers, TestQuetions);
+                operationDetails = PLRepository.CalculateTestResults(AllAnswers, UserAnswers, TestQuetions, out TestResultViewModel testResult);
+                if (!operationDetails.Succedeed)
+                {
+                    return;
+                }
                 // Is the test passed?
                 int firstQuestionId = AllAnswers.FirstOrDefault().Key;
                 CourseDTO courseDTO = (await QuestionService.GetAsync(firstQuestionId)).Topic.Course;
                 testResult.IsPassedTest = testResult.Result > testResult.MaxScore * courseDTO.PassingScore / 100;
 
                 // IV. Write the test results to DB.
-                OperationDetails operationDetails = await SaveCurrentTestResults(id, currentUserId, testResult);
-                if (!operationDetails.Succedeed)
-                {
-                    throw new Exception (operationDetails.Message);
-                }
+                operationDetails = await SaveCurrentTestResults(id, currentUserId, testResult);
             }
             catch (Exception ex)
             {
@@ -980,12 +985,11 @@ namespace SiteWithAuthentication.WEB.Controllers
                 }
 
                 // V.
-                operationDetails = new OperationDetails(true, "Test results have successfully added to DB!", "TestController.SaveCurrentTestResults");
-                return operationDetails;
+                return new OperationDetails(true, "Test results have successfully added to DB!", "TestController.SaveCurrentTestResults");
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return new OperationDetails(false, "Failed to add test results to DB! Exception: " + ex.Message, "TestController.SaveCurrentTestResults");
             }
         }
     }

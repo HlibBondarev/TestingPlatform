@@ -3,7 +3,8 @@
 
 <h2>@Model.Property:</h2>
 <p>@Model.Message</p>
-<script>
+@section scripts {
+    <script>
     $(document).ready(function () {
         setTimeout(function() {
             window.location.href =
@@ -18,4 +19,5 @@
                   }";
         }, 1000);
     })
-</script>
+    </script>
+}

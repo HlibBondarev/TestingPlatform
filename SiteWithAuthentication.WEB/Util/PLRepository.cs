@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using SiteWithAuthentication.BLL.Infrastructure;
 
 namespace SiteWithAuthentication.WEB.Util
 {
@@ -125,25 +126,25 @@ namespace SiteWithAuthentication.WEB.Util
             }
         }
 
-
-        // Check!!!
-        internal static TestResultViewModel CalculateTestResults(Dictionary<int, List<UserAnswer>> allAnswers,
-                                                               Dictionary<int, List<UserAnswer>> userAnswers,
-                                                               List<UserQuestionAnswersViewModel> questionList)
+        internal static OperationDetails CalculateTestResults(Dictionary<int, List<UserAnswer>> allAnswers,
+                                                                 Dictionary<int, List<UserAnswer>> userAnswers,
+                                                                 List<UserQuestionAnswersViewModel> questionList,
+                                                                 out TestResultViewModel testResult)
         {
             object lockObj = new object();
             lock (lockObj)
             {
+                testResult = null;
                 try
                 {
                     // I. Check.
                     if (allAnswers.Count == 0 || userAnswers.Count == 0)
                     {
-                        throw new Exception("Parameters allAnswers and (or) userAnswers is empty!!!");
+                        return new OperationDetails(false, "Parameters allAnswers and (or) userAnswers is empty.", "PLRepository.CalculateTestResults");
                     }
 
                     // II. Get the test results and set them to testResult var .
-                    TestResultViewModel testResult = new TestResultViewModel();
+                    testResult = new TestResultViewModel();
                     TestResultDetailViewModel testResultDetail;
                     int testScore = 0;
                     int questionWeight = 0;
@@ -169,11 +170,12 @@ namespace SiteWithAuthentication.WEB.Util
                     }
                     testResult.MaxScore = maxScore;
                     testResult.Result = testScore;
-                    return testResult;
+                    return new OperationDetails(true, "Method completed successfully.", "PLRepository.CalculateTestResults");
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(ex.Message);
+                    testResult = null;
+                    return new OperationDetails(false, ex.Message, "PLRepository.CalculateTestResults");
                 }
             }
         }
@@ -192,7 +194,7 @@ namespace SiteWithAuthentication.WEB.Util
                 UserAnswer firstProperAnswer = selectedProperAnswerList.FirstOrDefault();
                 if (firstProperAnswer == null)
                 {
-                    throw new Exception("There isn't any one answer marked like proper!!! This is the test moderator error.");
+                    throw new Exception("There isn't any one answer marked like proper!!! This is the test error. Contact the test moderator.");
                 }
 
                 switch (answerType.ToLower())
